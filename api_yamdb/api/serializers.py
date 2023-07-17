@@ -14,8 +14,9 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         request = self.context['request']
-        if request.method == 'POST' and request.user.reviews.filter(
-                title=self.context['view'].get_title()).exists():
+        title_id = self.context['view'].get_title().id
+        if (self.context['request'].method == 'POST'
+                and request.user.reviews.filter(title__id=title_id).exists()):
             raise serializers.ValidationError(
                 'Нельзя оставить второй отзыв.')
         return data
